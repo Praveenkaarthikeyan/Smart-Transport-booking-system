@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Public Transport Booking System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-icon">&#128640;</span>
+    <span class="brand-text">Smart<span class="accent">Transit</span></span>
+  </div>
+  <nav class="nav-tabs">
+    <button class="nav-btn active" data-view="plan">Plan a Trip</button>
+    <button class="nav-btn" data-view="book">Book a Ticket</button>
+    <button class="nav-btn" data-view="history">My Bookings</button>
+    <button class="nav-btn" data-view="admin">Admin</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============ PLAN A TRIP VIEW ============ -->
+  <section id="view-plan" class="view active">
+
+    <section class="hero">
+      <h1>Where are you headed?</h1>
+      <p>Search by locality or city, anywhere in Tamil Nadu or across India — we'll compare Auto, Metro, Bus, Train and Flight, and suggest the best mix if that beats going direct.</p>
+
+      <form id="plan-form" class="search-card">
+        <div class="field">
+          <label>From</label>
+          <select id="plan-source" required>
+            <option value="">Loading places...</option>
+          </select>
+        </div>
+        <div class="swap-icon" id="swap-plan" title="Swap">&#8646;</div>
+        <div class="field">
+          <label>To</label>
+          <select id="plan-destination" required>
+            <option value="">Loading places...</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary">Plan My Trip</button>
+      </form>
+    </section>
+
+    <section id="plan-results" class="results-section hidden">
+      <span id="trip-type-badge" class="trip-type-badge"></span>
+
+      <div class="plan-columns">
+        <div class="plan-column" id="best-direct-column">
+          <h3>Best Direct Route</h3>
+          <div id="best-direct-card"></div>
+        </div>
+        <div class="plan-column" id="best-mixed-column">
+          <h3>Suggested Mixed Route</h3>
+          <div id="best-mixed-card"></div>
+        </div>
+      </div>
+
+      <button class="all-options-toggle" id="toggle-all-options">Show all options &#9662;</button>
+      <div id="all-options-list" class="hidden"></div>
+    </section>
+
+  </section>
+
+  <!-- ============ BOOKING VIEW ============ -->
+  <section id="view-book" class="view">
+
+    <section class="hero">
+      <h1>Go anywhere, the smart way.</h1>
+      <p>Search Trains, Buses and Metros in one place — and if your first pick is full, we'll find you a better one.</p>
+
+      <form id="search-form" class="search-card">
+        <div class="field">
+          <label>From</label>
+          <select id="source" required>
+            <option value="">Loading cities...</option>
+          </select>
+        </div>
+        <div class="swap-icon" id="swap-cities" title="Swap">&#8646;</div>
+        <div class="field">
+          <label>To</label>
+          <select id="destination" required>
+            <option value="">Loading cities...</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary">Search</button>
+      </form>
+    </section>
+
+    <section id="results-section" class="results-section hidden">
+      <h2>Available options</h2>
+      <div id="results-grid" class="cards-grid"></div>
+    </section>
+
+    <section id="alternatives-section" class="alternatives-section hidden">
+      <div class="alt-banner">
+        <span class="alt-icon">&#9888;&#65039;</span>
+        <div>
+          <strong id="alt-fail-message">That option isn't available.</strong>
+          <p>Here are the best alternatives we found for you:</p>
+        </div>
+      </div>
+      <div id="alternatives-grid" class="cards-grid"></div>
+    </section>
+
+  </section>
+
+  <!-- ============ HISTORY VIEW ============ -->
+  <section id="view-history" class="view">
+    <h1>My Bookings</h1>
+    <p class="subtle">Enter the name you used while booking to see your tickets.</p>
+    <form id="history-form" class="inline-form">
+      <input type="text" id="history-name" placeholder="Your name" required>
+      <button type="submit" class="btn-primary">View</button>
+    </form>
+    <div id="history-grid" class="cards-grid"></div>
+
+    <div class="cancel-box">
+      <h3>Cancel a ticket</h3>
+      <form id="cancel-form" class="inline-form">
+        <input type="text" id="cancel-pnr" placeholder="Enter PNR" required>
+        <button type="submit" class="btn-danger">Cancel Ticket</button>
+      </form>
+      <p id="cancel-result" class="result-line"></p>
+    </div>
+  </section>
+
+  <!-- ============ ADMIN VIEW ============ -->
+  <section id="view-admin" class="view">
+    <h1>Admin Panel</h1>
+    <p class="subtle">Add, update, or remove transport services.</p>
+
+    <div class="admin-grid">
+      <form id="admin-add-form" class="admin-card">
+        <h3>Add New Transport</h3>
+        <select id="add-type">
+          <option value="TRAIN">Train</option>
+          <option value="BUS">Bus</option>
+          <option value="METRO">Metro</option>
+        </select>
+        <input type="text" id="add-id" placeholder="ID (e.g. T200)" required>
+        <input type="text" id="add-name" placeholder="Name" required>
+        <input type="text" id="add-source" placeholder="Source" required>
+        <input type="text" id="add-destination" placeholder="Destination" required>
+        <input type="text" id="add-departure" placeholder="Departure (HH:mm)" required>
+        <input type="text" id="add-arrival" placeholder="Arrival (HH:mm)" required>
+        <input type="number" id="add-fare" placeholder="Fare" required>
+        <input type="number" id="add-seats" placeholder="Total Seats" required>
+        <input type="text" id="add-extra" placeholder="Coach/Bus Type/Line Name">
+        <button type="submit" class="btn-primary">Add</button>
+        <p class="result-line" id="add-result"></p>
+      </form>
+
+      <form id="admin-update-form" class="admin-card">
+        <h3>Update Fare / Seats</h3>
+        <input type="text" id="update-id" placeholder="Transport ID" required>
+        <input type="number" id="update-fare" placeholder="New Fare" required>
+        <input type="number" id="update-seats" placeholder="New Total Seats" required>
+        <button type="submit" class="btn-primary">Update</button>
+        <p class="result-line" id="update-result"></p>
+      </form>
+
+      <form id="admin-remove-form" class="admin-card">
+        <h3>Remove Transport</h3>
+        <input type="text" id="remove-id" placeholder="Transport ID" required>
+        <button type="submit" class="btn-danger">Remove</button>
+        <p class="result-line" id="remove-result"></p>
+      </form>
+    </div>
+
+    <h2>All Transport Services</h2>
+    <div id="admin-list" class="cards-grid"></div>
+  </section>
+
+</main>
+
+<!-- ============ TICKET MODAL ============ -->
+<div id="ticket-modal" class="modal hidden">
+  <div class="modal-content">
+    <div class="ticket-check">&#10003;</div>
+    <h2>Booking Confirmed!</h2>
+    <div id="ticket-details" class="ticket-details"></div>
+    <button class="btn-primary" id="close-modal">Done</button>
+  </div>
+</div>
+
+<!-- ============ PASSENGER DETAILS MODAL ============ -->
+<div id="passenger-modal" class="modal hidden">
+  <div class="modal-content">
+    <h2>Passenger Details</h2>
+    <form id="passenger-form">
+      <input type="text" id="p-name" placeholder="Full Name" required>
+      <input type="number" id="p-age" placeholder="Age" required>
+      <select id="p-gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="cancel-passenger">Cancel</button>
+        <button type="submit" class="btn-primary">Confirm Booking</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
